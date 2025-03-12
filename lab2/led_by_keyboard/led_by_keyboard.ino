@@ -1,10 +1,3 @@
-int buttonPinHold = 4;
-int ledPinHold = 8;
-
-int buttonPinClick = 2;
-int ledPinClick = 10;
-int lPCState = LOW;
-
 int ledPinKeyboard = 6;
 int lPKState = LOW; // state of led controlling by keyboard
 int lBState = LOW; // state of builtin led
@@ -12,11 +5,9 @@ int lBState = LOW; // state of builtin led
 void setup()
 {
   // set required mods for all buttons and leds to handle it correctly
-  pinMode(buttonPinHold, INPUT_PULLUP);
-  pinMode(ledPinHold, OUTPUT);
-  pinMode(buttonPinHold, INPUT_PULLUP);
-  pinMode(ledPinHold, OUTPUT);
   pinMode(ledPinKeyboard, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
 
   Serial.begin(9600); // open port with default speed
 
@@ -29,17 +20,6 @@ void setup()
 
 void loop()
 {
-  // glows while button is pressed
-  digitalWrite(ledPinHold, digitalRead(buttonPinHold));
-  
-  // if button was pressed
-  if (digitalRead(buttonPinClick) == HIGH) {
-    // wait till button will be unpressed
-    while (digitalRead(buttonPinClick) == HIGH);
-    lPCState = !lPCState; // change state of led
-    digitalWrite(ledPinClick, lPCState); // set updated state
-  }
-
   // if any data was recieved
   if  (Serial.available()) {
     // read by byte (commands are chars so any other type is excess)
@@ -66,7 +46,8 @@ void loop()
       digitalWrite(LED_BUILTIN, lBState);
       digitalWrite(ledPinKeyboard, lPKState);
       delay(500);
-    } else {
+    } else if (command == '\n') {} 
+    else {
       // notify user that command is invalid
       Serial.println("There is no such a command. \
       You can use only Q, W, E commands.");
