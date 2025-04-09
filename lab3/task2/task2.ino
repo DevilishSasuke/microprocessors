@@ -27,6 +27,7 @@ void loop() {
 }
 
 void startGame() {
+  Serial.println("GAME STARTED.");
   int iteration_num = random(3, 7);
   for (int i = 0; i < 5; ++i) 
   {
@@ -49,9 +50,9 @@ void smoothGlow(int pinPos, int brightness, int delay_time) {
 }
 
 void showWin(int pin) {
-  digitalWrite(pin, HIGH);
+  analogWrite(pin, 250);
   delay(3000);
-  digitalWrite(pin, LOW);
+  analogWrite(pin, 0);
 }
 
 void handleEveryButton() {
@@ -70,13 +71,15 @@ void handleEveryButton() {
 		if (digitalRead(buttonPin1) == HIGH && btnReady1) {
       showWin(ledPin1);
       Serial.println("Player 1 win");
-      return;
+      break;
     }
 		if (digitalRead(buttonPin2) == HIGH && btnReady2) {
       showWin(ledPin2);
       Serial.println("Player 2 win");
-      return;
+      break;
     }
 	}
+
+  Serial.println("GAME ENDED.");
 }
 
